@@ -21,6 +21,7 @@ export const loginDoctor = async (req, res) => {
   }
 };
 
+
 export const getDoctorAppointments = async (req, res) => {
   const { id: doctorId } = req.user;
   const { date } = req.query;
