@@ -1,22 +1,23 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import db from './config/db.js';
+import doctorRoutes from './routes/doctorRoutes.js';
+import authMiddleware from './middleware/authMiddleware.js';
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
 
-app.get('/', (req, res) => res.send('API is running'));
+app.use(express.json()); // Middleware to parse JSON
 
-// Test database connection
-app.get('/test-db', async (req, res) => {
-  try {
-    const result = await db.query('SELECT NOW()');
-    res.json({ message: 'Database connected', serverTime: result.rows[0].now });
-  } catch (err) {
-    res.status(500).json({ error: 'Database connection failed', details: err.message });
-  }
+// Routes
+app.use('/doctor', doctorRoutes);
+
+// Default error handling
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ message: 'Internal server error' });
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,39 +1,42 @@
 -- Create the specialties table first, as doctors depend on it
-CREATE TABLE IF NOT EXISTS specialties (
+CREATE TABLE IF NOT EXISTS speciality (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) UNIQUE NOT NULL
 );
 
 -- Create doctors table
-CREATE TABLE IF NOT EXISTS doctors (
+CREATE TABLE IF NOT EXISTS doctor (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100),
+  name VARCHAR(100) NOT NULL,
+  age INT CHECK (age > 0),
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(100) NOT NULL,
-  specialty_id INT REFERENCES specialties(id)
+  specialty_id INT REFERENCES speciality(id)
 );
 
 -- Create patients table
-CREATE TABLE IF NOT EXISTS patients (
+CREATE TABLE IF NOT EXISTS patient (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100),
+  name VARCHAR(100) NOT NULL,
+  age INT CHECK (age > 0),
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(100) NOT NULL
 );
 
 -- Create appointments table
-CREATE TABLE IF NOT EXISTS appointments (
+CREATE TABLE IF NOT EXISTS medicalappointments (
   id SERIAL PRIMARY KEY,
-  doctor_id INT REFERENCES doctors(id),
-  patient_id INT REFERENCES patients(id),
+  doctor_id INT REFERENCES doctor(id),
+  patient_id INT REFERENCES patient(id),
   appointment_date DATE NOT NULL,
   appointment_time TIME NOT NULL,
   UNIQUE (doctor_id, appointment_date, appointment_time),
   UNIQUE (patient_id, appointment_date, appointment_time)
 );
 
+
 -- Insert specialties
-INSERT INTO specialties (name) VALUES
+INSERT INTO speciality (name) VALUES
 ('Medicina General'),
 ('Cardiología'),
 ('Urología'),
@@ -41,7 +44,7 @@ INSERT INTO specialties (name) VALUES
 ('Pediatría');
 
 -- Insert sample doctors
-INSERT INTO doctors (name, email, password, specialty_id) VALUES
+INSERT INTO doctor (name, email, password, specialty_id) VALUES
 ('Dr. Juan Pérez', 'juan.perez@hospital.com', 'hashed_password_1', 1),
 ('Dr. Ana Gómez', 'ana.gomez@hospital.com', 'hashed_password_2', 2),
 ('Dr. Carlos Ruiz', 'carlos.ruiz@hospital.com', 'hashed_password_3', 3),
@@ -49,7 +52,7 @@ INSERT INTO doctors (name, email, password, specialty_id) VALUES
 ('Dr. Mario López', 'mario.lopez@hospital.com', 'hashed_password_5', 5);
 
 -- Insert sample patients
-INSERT INTO patients (name, email, password) VALUES
+INSERT INTO patient (name, email, password) VALUES
 ('Paciente 1', 'paciente1@hospital.com', 'hashed_password_1'),
 ('Paciente 2', 'paciente2@hospital.com', 'hashed_password_2'),
 ('Paciente 3', 'paciente3@hospital.com', 'hashed_password_3'),
