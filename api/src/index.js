@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import doctorRoutes from './routes/doctorRoutes.js';
-import authMiddleware from './middleware/authMiddleware.js';
+import patientRoutes from './routes/patientRoutes.js'; // Import patient routes
 
 dotenv.config();
 
@@ -11,6 +11,7 @@ app.use(express.json()); // Middleware to parse JSON
 
 // Routes
 app.use('/doctor', doctorRoutes);
+app.use('/patient', patientRoutes); // Add patient routes
 
 // Default error handling
 app.use((err, req, res, next) => {
