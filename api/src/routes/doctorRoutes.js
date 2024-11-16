@@ -23,14 +23,10 @@ router.post(
   loginDoctor
 );
 
-// Get Doctor Appointments (Requires authentication)
-router.get(
-  '/appointment',
-  authMiddleware('doctor'),
-  getDoctorAppointments
-);
+// Get Doctor Appointments
+router.get('/appointment', authMiddleware('doctor'), getDoctorAppointments);
 
-// Create Appointment (Requires authentication)
+// Create Appointment
 router.post(
   '/appointment',
   [
@@ -45,7 +41,7 @@ router.post(
   postDoctorAppointment
 );
 
-// Update Appointment (Requires authentication)
+// Update Appointment
 router.put(
   '/appointment/:appointmentId',
   [
@@ -61,7 +57,7 @@ router.put(
   putDoctorAppointment
 );
 
-// Delete Appointment (Requires authentication)
+// Delete Appointment
 router.delete(
   '/appointment/:appointmentId',
   [

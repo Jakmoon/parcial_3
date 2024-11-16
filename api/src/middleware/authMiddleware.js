@@ -1,24 +1,26 @@
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'; // Import JSON Web Token module
 
-const authMiddleware = (role) => (req, res, next) => {
+const authMiddleware = (role = null) => (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ message: 'No token provided' });
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No token provided or invalid format' });
   }
 
   const token = authHeader.split(' ')[1];
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
 
     if (role && decoded.role !== role) {
-      return res.status(403).json({ message: 'Forbidden: Insufficient permissions' });
+      return res.status(403).json({ message: 'Forbidden: Insufficient role' });
     }
 
-    req.user = decoded; // Attach decoded token data (e.g., user ID) to the request
-    next();
+    next(); // Proceed to the next middleware or controller
   } catch (error) {
-    res.status(401).json({ message: 'Invalid token', error: error.message });
+    res.status(401).json({ message: 'Invalid or expired token' });
   }
 };
 
-export default authMiddleware;
+export default authMiddleware; // Default export
